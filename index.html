@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>个人网站 | Your Name</title>
+    <meta
+      name="description"
+      content="一个简洁、现代的个人网站，用于展示自我介绍、技能、项目和联系方式。"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <div class="brand">ZM</div>
+        <nav class="nav">
+          <a href="#about">关于我</a>
+          <a href="#skills">技能</a>
+          <a href="#projects">项目</a>
+          <a href="#news">新闻</a>
+          <a href="#contact">联系</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero" id="about">
+          <div class="hero-copy">
+            <p class="eyebrow">Hello, I'm</p>
+            <h1>钟梦婷</h1>
+            <p class="intro">
+              我是一名热爱产品体验与技术实现的创作者，专注于把复杂想法整理成简洁、可用、好看的数字产品。
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#projects">查看项目</a>
+              <a class="button secondary" href="#contact">联系我</a>
+            </div>
+          </div>
+          <div class="hero-card">
+            <div class="avatar">ZM</div>
+            <p class="card-title">个人简介</p>
+            <p class="card-text">
+              关注设计感、效率和落地性，喜欢用清晰的结构与友好的交互解决真实问题。
+            </p>
+          </div>
+        </section>
+
+        <section class="section" id="skills">
+          <div class="section-heading">
+            <p class="eyebrow">What I do</p>
+            <h2>我能做什么</h2>
+          </div>
+          <div class="grid three">
+            <article class="panel">
+              <h3>产品策划</h3>
+              <p>擅长把模糊需求拆解成清晰的信息结构、页面流程和可执行方案。</p>
+            </article>
+            <article class="panel">
+              <h3>界面设计</h3>
+              <p>追求简洁、现代和易读的视觉表达，让页面更有质感和节奏感。</p>
+            </article>
+            <article class="panel">
+              <h3>前端实现</h3>
+              <p>能把设计快速转成高质量网页，关注细节、性能和响应式体验。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="projects">
+          <div class="section-heading">
+            <p class="eyebrow">Selected Work</p>
+            <h2>项目展示</h2>
+          </div>
+          <div class="grid two">
+            <article class="project-card large">
+              <span class="tag">Featured</span>
+              <h3>个人作品集网站</h3>
+              <p>
+                一个强调视觉呼吸感和信息层次的展示型网站，用来介绍个人经历、能力和代表作品。
+              </p>
+            </article>
+            <article class="project-card">
+              <span class="tag">Project</span>
+              <h3>活动落地页</h3>
+              <p>围绕转化目标设计首屏信息、亮点模块和行动按钮，提升访问效率。</p>
+            </article>
+            <article class="project-card">
+              <span class="tag">Project</span>
+              <h3>内部效率工具</h3>
+              <p>为团队场景设计简洁易用的操作界面，帮助减少重复劳动、提升协作效率。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="news">
+          <div class="section-heading news-heading">
+            <div>
+              <p class="eyebrow">Daily Briefing</p>
+              <h2>每日 AI 与财经新闻</h2>
+            </div>
+            <p class="news-update-time" id="news-updated-at">最近更新：加载中…</p>
+          </div>
+
+          <div class="news-layout">
+            <div class="news-column">
+              <div class="news-column-title">
+                <span class="news-pill ai">AI</span>
+                <h3>人工智能</h3>
+              </div>
+              <div class="news-list" id="ai-news-list"></div>
+            </div>
+
+            <div class="news-column">
+              <div class="news-column-title">
+                <span class="news-pill finance">Finance</span>
+                <h3>财经动态</h3>
+              </div>
+              <div class="news-list" id="finance-news-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section contact-section" id="contact">
+          <div>
+            <p class="eyebrow">Get in touch</p>
+            <h2>欢迎联系我</h2>
+            <p class="contact-copy">
+              如果你想合作、交流想法，或者邀请我参与项目，欢迎通过邮箱与我联系。
+            </p>
+          </div>
+          <a class="button primary" href="mailto:hello@example.com">hello@example.com</a>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p>© 2026 钟梦婷 · Personal Website</p>
+      </footer>
+    </div>
+  </body>
+</html>
