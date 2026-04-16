@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pulse Daily | AI、财经与A股观察</title>
+    <title>Pulse Daily | 每日新闻与A股观察</title>
     <meta
       name="description"
-      content="专注 AI、财经与 A 股观察的纯新闻网站，提供每日更新的重点快讯、趋势观察与市场关注名单。"
+      content="一个面向日常阅读的个人新闻终端，聚合 AI、财经新闻与每日 A 股观察，帮助你快速完成看新闻和看股票。"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,109 +18,108 @@
     <script src="./app.js" defer></script>
   </head>
   <body>
-    <div class="page-shell">
-      <header class="site-header">
-        <a class="brand" href="#top">Pulse Daily</a>
+    <div class="site-wrap">
+      <header class="topbar" id="top">
+        <div class="brand-block">
+          <a class="brand" href="#top">Pulse Daily</a>
+          <p class="brand-subtitle">每天快速看新闻，也快速看股票</p>
+        </div>
         <nav class="nav">
-          <a href="#top-stories">头条</a>
-          <a href="#ai">AI</a>
+          <a href="#focus">今日重点</a>
+          <a href="#news">新闻摘要</a>
           <a href="#stocks">A股观察</a>
-          <a href="#finance">财经</a>
-          <a href="#brief">快报</a>
+          <a href="#brief">更新时间</a>
         </nav>
       </header>
 
-      <main id="top">
-        <section class="hero" id="top-stories">
-          <div class="hero-main">
-            <p class="eyebrow">Daily Newsroom</p>
-            <h1>聚焦 AI、财经与 A 股观察的每日新闻首页</h1>
-            <p class="intro">
-              这里是一张更纯粹的新闻首页。你可以快速浏览 AI 和财经两大板块，同时查看每天两次更新的 A 股观察名单，第一时间把握值得持续跟踪的主题与市场线索。
+      <main>
+        <section class="focus-grid" id="focus">
+          <article class="focus-main">
+            <div class="section-kicker">Today Focus</div>
+            <h1 id="headline-title">正在加载今日焦点…</h1>
+            <p class="focus-summary" id="headline-summary">
+              页面会在这里展示当天最值得先看的重点新闻，让你打开首页就知道先看什么。
             </p>
-            <div class="hero-meta">
-              <div class="meta-card">
-                <span class="meta-label">更新频率</span>
-                <strong>新闻自动同步</strong>
-              </div>
-              <div class="meta-card">
-                <span class="meta-label">覆盖领域</span>
-                <strong>AI / Finance / A股</strong>
-              </div>
-              <div class="meta-card wide">
-                <span class="meta-label">最近新闻更新</span>
+            <div class="focus-meta">
+              <div class="meta-pill">
+                <span>最近新闻更新</span>
                 <strong id="news-updated-at">加载中…</strong>
               </div>
+              <div class="meta-pill">
+                <span>阅读方式</span>
+                <strong>少量摘要，快速读完</strong>
+              </div>
             </div>
-          </div>
-          <aside class="headline-panel">
-            <p class="panel-kicker">焦点观察</p>
-            <h2 id="headline-title">正在加载今日头条…</h2>
-            <p id="headline-summary">
-              稍候将显示当前新闻数据中的第一条重点内容，帮助访客在首屏快速抓住当天最值得看的主题。
-            </p>
+          </article>
+
+          <aside class="focus-side" id="brief">
+            <div class="brief-item">
+              <span class="brief-label">阅读目标</span>
+              <strong>先看重点，再看市场</strong>
+            </div>
+            <div class="brief-item">
+              <span class="brief-label">新闻范围</span>
+              <strong>AI 与财经两类核心摘要</strong>
+            </div>
+            <div class="brief-item brief-item-stock">
+              <span class="brief-label">股票更新时间</span>
+              <strong>每日 09:30 / 14:30</strong>
+              <p id="stocks-updated-at">最近观察更新：加载中…</p>
+            </div>
           </aside>
         </section>
 
-        <section class="brief-strip" id="brief">
-          <div class="brief-card">
-            <span>实时定位</span>
-            <strong>只看 AI、财经与 A股核心内容</strong>
-          </div>
-          <div class="brief-card">
-            <span>阅读方式</span>
-            <strong>首页即读，无需跳转</strong>
-          </div>
-          <div class="brief-card">
-            <span>观察时间</span>
-            <strong>每日 09:30 / 14:30 更新 3 支</strong>
-          </div>
-        </section>
-
-        <section class="news-section" id="ai">
-          <div class="section-heading split">
+        <section class="news-overview" id="news">
+          <div class="section-header">
             <div>
-              <p class="eyebrow">AI Coverage</p>
-              <h2>人工智能</h2>
+              <p class="section-kicker">News Brief</p>
+              <h2>新闻摘要</h2>
             </div>
-            <p class="section-note">关注模型、产品、Agent 与产业落地</p>
+            <p class="section-desc">控制在少量高价值信息，适合你每天快速浏览。</p>
           </div>
-          <div class="news-list featured" id="ai-news-list"></div>
+
+          <div class="news-columns">
+            <section class="news-column">
+              <div class="column-head">
+                <h3>AI</h3>
+                <span>模型、产品、Agent、产业</span>
+              </div>
+              <div class="news-list" id="ai-news-list"></div>
+            </section>
+
+            <section class="news-column">
+              <div class="column-head finance-tone">
+                <h3>财经</h3>
+                <span>宏观、市场、资金、商业</span>
+              </div>
+              <div class="news-list" id="finance-news-list"></div>
+            </section>
+          </div>
         </section>
 
         <section class="stocks-section" id="stocks">
-          <div class="section-heading split stocks-heading">
+          <div class="section-header stocks-header">
             <div>
-              <p class="eyebrow">A-Share Watchlist</p>
+              <p class="section-kicker">A-Share Watch</p>
               <h2>今日 A 股观察</h2>
             </div>
-            <div class="stocks-update-box">
-              <p class="section-note">固定更新时间：每日 09:30 与 14:30</p>
-              <p class="stocks-updated-at" id="stocks-updated-at">最近观察更新：加载中…</p>
-            </div>
-          </div>
-          <div class="stocks-intro">
-            <p>
-              这里展示的是当日值得继续跟踪的 A 股市场观察名单，偏向信息整理与主题脉络梳理，不构成个股买卖建议。
+            <p class="section-desc">
+              只保留 3 支最值得继续跟踪的股票，并补充近期走向表格，方便你快速判断观察重点。
             </p>
           </div>
-          <div class="stocks-grid" id="stock-list"></div>
-        </section>
 
-        <section class="news-section" id="finance">
-          <div class="section-heading split">
-            <div>
-              <p class="eyebrow">Finance Coverage</p>
-              <h2>财经动态</h2>
-            </div>
-            <p class="section-note">关注市场、估值、资金流向与商业信号</p>
+          <div class="stocks-intro">
+            <p>
+              这里展示的是当日值得继续跟踪的 A 股观察名单，偏向信息整理与主题脉络梳理，不构成个股买卖建议。
+            </p>
           </div>
-          <div class="news-list compact" id="finance-news-list"></div>
+
+          <div class="stocks-grid" id="stock-list"></div>
         </section>
       </main>
 
       <footer class="site-footer">
-        <p>© 2026 Pulse Daily · AI、财经与 A 股观察网站</p>
+        <p>© 2026 Pulse Daily · 个人新闻终端 · AI、财经与 A 股观察</p>
       </footer>
     </div>
   </body>
