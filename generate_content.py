@@ -80,31 +80,45 @@ def parse_rss(raw: bytes, limit: int = 3) -> list[dict]:
 
 # ── 新闻生成 ──────────────────────────────────────────────────────────
 
-# AI 新闻 RSS 源（多个备用，取第一个成功的）
+# AI 新闻 RSS 源 —— 专项频道，避免混入无关内容
 AI_RSS_SOURCES = [
-    ("模型",   "https://www.jiqizhixin.com/rss"),
-    ("产品",   "https://36kr.com/feed"),
-    ("Agent",  "https://rsshub.app/36kr/news/technology"),
+    ("模型",   "https://www.jiqizhixin.com/rss"),                       # 机器之心 全站
+    ("产品",   "https://rsshub.app/36kr/news/cate/329"),                # 36Kr 人工智能频道
+    ("Agent",  "https://rsshub.app/sspai/tag/AI"),                      # 少数派 AI 标签
+    ("产业",   "https://rsshub.app/gcores/categories/news"),             # 备用
 ]
 
-# 财经新闻 RSS 源
+# 财经新闻 RSS 源 —— 专项频道
 FINANCE_RSS_SOURCES = [
-    ("宏观",   "https://rsshub.app/sina/finance/stock"),
-    ("市场",   "https://rsshub.app/eastmoney/news/cjxw"),
-    ("资金",   "https://rsshub.app/gelonghui/home"),
+    ("宏观",   "https://rsshub.app/eastmoney/news/cjxw"),               # 东方财富财经新闻
+    ("市场",   "https://rsshub.app/wallstreetcn/news/essential"),       # 华尔街见闻精选
+    ("资金",   "https://rsshub.app/gelonghui/home"),                    # 格隆汇
+    ("商业",   "https://rsshub.app/sina/finance/roll/2"),               # 新浪财经滚动
 ]
 
+# 过滤关键词：包含以下词的标题不展示（避免娱乐/生活类噪音进入）
+AI_BLOCK_KEYWORDS    = ["相机", "手机发布", "电视", "游戏", "音乐", "美食", "酒店", "家具", "续航测试"]
+FINANCE_BLOCK_KEYWORDS = ["娱乐", "电影", "明星", "综艺", "八卦"]
 
-def fetch_news_from_sources(sources: list, need: int = 2) -> list[dict]:
-    """依次尝试各个 RSS 源，直到凑够 need 条"""
+
+def fetch_news_from_sources(sources: list, need: int = 2, block_keywords: list = None) -> list[dict]:
+    """依次尝试各个 RSS 源，直到凑够 need 条，自动过滤噪音关键词"""
+    block_keywords = block_keywords or []
     results = []
     for topic, url in sources:
         if len(results) >= need:
             break
         try:
             raw   = fetch(url, timeout=15)
-            items = parse_rss(raw, limit=need - len(results))
+            # 每个源多抓一些，以便过滤后还够用
+            items = parse_rss(raw, limit=(need - len(results)) * 3)
             for item in items:
+                if len(results) >= need:
+                    break
+                title = item.get("title", "")
+                # 过滤掉包含噪音关键词的标题
+                if any(kw in title for kw in block_keywords):
+                    continue
                 item["topic"] = topic
                 results.append(item)
         except Exception as e:
@@ -114,10 +128,10 @@ def fetch_news_from_sources(sources: list, need: int = 2) -> list[dict]:
 
 def generate_news() -> dict:
     print("  抓取 AI 新闻…")
-    ai_items = fetch_news_from_sources(AI_RSS_SOURCES, need=2)
+    ai_items = fetch_news_from_sources(AI_RSS_SOURCES, need=2, block_keywords=AI_BLOCK_KEYWORDS)
 
     print("  抓取财经新闻…")
-    fin_items = fetch_news_from_sources(FINANCE_RSS_SOURCES, need=2)
+    fin_items = fetch_news_from_sources(FINANCE_RSS_SOURCES, need=2, block_keywords=FINANCE_BLOCK_KEYWORDS)
 
     # 兜底：如果抓不到就用占位内容
     fallback_ai = [
