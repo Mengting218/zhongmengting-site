@@ -1,0 +1,24 @@
+name: 自动更新新闻与股票内容
+
+on:
+  schedule:
+    - cron: "30 1 * * 1-5"
+    - cron: "30 6 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 运行内容生成脚本
+        run: python generate_content.py --all
+      - name: 提交并推送更新
+        run: |
+          git config user.name "Pulse Daily Bot"
+          git config user.email "bot@pulse-daily"
+          git add news.json stocks.json
+          git diff --cached --quiet && echo "无变化跳过" || (git commit -m "auto: 更新内容 $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')" && git push)
