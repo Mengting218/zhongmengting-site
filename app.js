@@ -197,5 +197,70 @@ async function loadStocks() {
   }
 }
 
+// ── 算力产业链 ────────────────────────────────────────────────────────
+
+function buildChainItem(item) {
+  const tags = Array.isArray(item.tags)
+    ? item.tags.map(t => '<span class="chain-tag">' + escapeHtml(t) + '</span>').join("") : "";
+  const panel = item.panel || {};
+  const change = panel.change || {};
+  const c5  = change["5d"]  || "—";
+  const c10 = change["10d"] || "—";
+  const c20 = change["20d"] || "—";
+  return '<div class="chain-item">'
+    + '<div class="chain-item-head">'
+    +   '<span class="chain-rank">0' + escapeHtml(item.rank) + '</span>'
+    +   '<div class="chain-item-info">'
+    +     '<div class="chain-name-row">'
+    +       '<strong>' + escapeHtml(item.name) + '</strong>'
+    +       '<span class="chain-code">' + escapeHtml(item.code) + '</span>'
+    +       '<span class="chain-market">' + escapeHtml(item.market) + '</span>'
+    +     '</div>'
+    +     '<p class="chain-relation">' + escapeHtml(item.relation) + '</p>'
+    +     '<div class="chain-tags">' + tags + '</div>'
+    +   '</div>'
+    +   '<div class="chain-chips">'
+    +     '<span class="change-chip ' + changeClass(c5)  + '"><em>5日</em>'  + escapeHtml(c5)  + '</span>'
+    +     '<span class="change-chip ' + changeClass(c10) + '"><em>10日</em>' + escapeHtml(c10) + '</span>'
+    +     '<span class="change-chip ' + changeClass(c20) + '"><em>20日</em>' + escapeHtml(c20) + '</span>'
+    +   '</div>'
+    + '</div>'
+    + '<div class="chain-spark">' + buildSparkline(panel.points) + '</div>'
+    + '</div>';
+}
+
+function buildChainSegment(seg) {
+  const items = Array.isArray(seg.items) ? seg.items.map(buildChainItem).join("") : "";
+  return '<div class="chain-segment">'
+    + '<div class="chain-seg-head">'
+    +   '<span class="chain-seg-label">' + escapeHtml(seg.label) + '</span>'
+    +   '<span class="chain-seg-desc">' + escapeHtml(seg.desc) + '</span>'
+    + '</div>'
+    + '<div class="chain-items">' + items + '</div>'
+    + '</div>';
+}
+
+function renderChain(data) {
+  const bodyEl     = document.getElementById("chain-body");
+  const discEl     = document.getElementById("chain-disclaimer");
+  const updatedEl  = document.getElementById("chain-updated-at");
+  if (!bodyEl) return;
+  const segments = Array.isArray(data.segments) ? data.segments : [];
+  bodyEl.innerHTML = segments.map(buildChainSegment).join("");
+  if (discEl && data.disclaimer) discEl.textContent = data.disclaimer;
+  if (updatedEl) updatedEl.textContent = "最近更新：" + (data.updatedAt || "—") + " · 沿链条梳理真实受益标的";
+}
+
+async function loadChain() {
+  try {
+    const r = await fetch("./chain.json", { cache: "no-store" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    renderChain(await r.json());
+  } catch (e) {
+    console.warn("chain.json 加载失败", e);
+  }
+}
+
 loadNews();
 loadStocks();
+loadChain();

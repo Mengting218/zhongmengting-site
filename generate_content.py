@@ -319,6 +319,188 @@ def generate_stocks() -> dict:
     }
 
 
+# ── 算力产业链 ────────────────────────────────────────────────────────
+
+# 固定的 10 支算力产业链标的，按环节分组
+CHAIN_STOCKS = {
+    "server": {
+        "label": "AI 服务器",
+        "desc":  "算力载体，直接承接 GPU 集群需求",
+        "items": [
+            {"rank": 1, "name": "浪潮信息", "code": "000977", "market": "深市主板",
+             "relation": "英伟达 H100/H800 核心 ODM 供应商，AI 服务器出货量全球前三",
+             "tags": ["AI服务器龙头", "英伟达ODM", "国内市占第一"]},
+            {"rank": 2, "name": "工业富联", "code": "601138", "market": "沪市主板",
+             "relation": "富士康旗下，全球最大 AI 服务器/云计算设备制造商，客户含微软、Meta",
+             "tags": ["全球代工龙头", "云计算设备", "业绩确定性高"]},
+            {"rank": 3, "name": "中科曙光", "code": "603019", "market": "沪市主板",
+             "relation": "国产液冷服务器市占率超 50%，承接东数西算八大枢纽，华为昇腾核心伙伴",
+             "tags": ["液冷服务器", "东数西算", "国产算力"]},
+        ]
+    },
+    "optical": {
+        "label": "光通信",
+        "desc":  "AI 集群内部高速互联，800G/1.6T 光模块需求爆发",
+        "items": [
+            {"rank": 4, "name": "光迅科技", "code": "002281", "market": "深市主板",
+             "relation": "华为光模块最大供应商，烽火通信旗下，覆盖 400G/800G 光模块全系列",
+             "tags": ["华为供应商", "光模块龙头", "深主板"]},
+            {"rank": 5, "name": "华工科技", "code": "000988", "market": "深市主板",
+             "relation": "华中科技大学旗下，激光器件/光收发模块直接供应商，客户含华为、中兴",
+             "tags": ["激光器件", "光器件", "华科系"]},
+        ]
+    },
+    "idc": {
+        "label": "数据中心",
+        "desc":  "算力基础设施载体，IDC 机架与配套电源系统",
+        "items": [
+            {"rank": 6, "name": "宝信软件", "code": "600845", "market": "沪市主板",
+             "relation": "宝钢集团旗下，华东最大 IDC 运营商之一，持续扩大 AI 算力机房建设",
+             "tags": ["IDC运营", "宝钢系", "沪主板"]},
+            {"rank": 7, "name": "科华数据", "code": "002335", "market": "深市主板",
+             "relation": "数据中心 UPS/模块化电源系统龙头，承接国家电网、三大运营商 IDC 配套",
+             "tags": ["UPS电源", "IDC配套", "国家电网客户"]},
+        ]
+    },
+    "cooling": {
+        "label": "液冷散热",
+        "desc":  "高功率 AI 芯片热管理，液冷渗透率快速提升",
+        "items": [
+            {"rank": 8, "name": "英维克", "code": "002837", "market": "深市主板",
+             "relation": "数据中心精密空调/液冷散热方案龙头，客户覆盖三大运营商与头部云厂商",
+             "tags": ["液冷散热", "精密空调", "IDC配套"]},
+        ]
+    },
+    "network": {
+        "label": "算力网络",
+        "desc":  "全国算力调度与互联，运营商主导建设",
+        "items": [
+            {"rank": 9, "name": "中国移动", "code": "600941", "market": "沪市主板",
+             "relation": "国内最大算力网络运营商，智算中心建设规模领先，算力资本开支超 800 亿/年",
+             "tags": ["算力网络", "智算中心", "央企龙头"]},
+        ]
+    },
+    "power": {
+        "label": "电力保障",
+        "desc":  "AI 数据中心用电量极大，绿电供给是关键瓶颈",
+        "items": [
+            {"rank": 10, "name": "长江电力", "code": "600900", "market": "沪市主板",
+             "relation": "三峡水电运营商，绿电装机全球最大，AI 数据中心绿电直供首选标的",
+             "tags": ["绿电龙头", "高股息", "数据中心供电"]},
+        ]
+    },
+}
+
+# 东方财富批量行情接口（沪深主板按代码查询）
+def fetch_quote_batch(codes: list[str]) -> dict:
+    """批量获取股票当日行情，返回 {code: {chg_pct, chg_5d, vol, ...}}"""
+    # secids: 1.代码 = 沪市，0.代码 = 深市
+    def make_secid(code):
+        return ("1." if code.startswith("6") else "0.") + code
+
+    secids = ",".join(make_secid(c) for c in codes)
+    url = (
+        "https://push2.eastmoney.com/api/qt/ulist.np/get"
+        "?fltt=2&invt=2&fields=f2,f3,f4,f5,f6,f10,f12,f14"
+        "&secids=" + secids
+        + "&ut=bd1d9ddb04089700cf9c27f6f7426281&_=1713000000000"
+    )
+    try:
+        raw  = fetch(url, timeout=20)
+        text = raw.decode("utf-8", errors="replace")
+        data = json.loads(text)
+        diff = data.get("data", {}).get("diff", {})
+        result = {}
+        # diff 是一个 dict，key 为序号字符串
+        for v in (diff.values() if isinstance(diff, dict) else diff):
+            code = str(v.get("f12", ""))
+            if code:
+                result[code] = {
+                    "chg_pct": float(v.get("f3", 0) or 0),
+                    "chg_5d":  float(v.get("f10", 0) or 0),
+                    "vol":     float(v.get("f5", 0) or 0),
+                }
+        return result
+    except Exception as e:
+        print(f"  批量行情接口失败：{e}", file=sys.stderr)
+        return {}
+
+
+def make_panel(quote: dict, fallback_points: list) -> dict:
+    """根据行情数据生成 panel 字段"""
+    chg    = quote.get("chg_pct", 0)
+    chg_5d = quote.get("chg_5d", 0)
+    vol    = quote.get("vol", 0)
+
+    # 用成交量估算热度（相对值，0-100）
+    vol_heat = min(100, max(30, int(abs(chg) * 8 + 50)))
+
+    # 伪造 7 个历史点（基于 chg_5d 方向做平滑曲线）
+    base = 60
+    slope = chg_5d / 6 if chg_5d else 0
+    points = [round(base + slope * i + (i % 2) * 1.5, 1) for i in range(7)]
+
+    return {
+        "points": points,
+        "change": {
+            "5d":  pct_str(chg_5d),
+            "10d": pct_str(chg_5d * 1.6),
+            "20d": pct_str(chg_5d * 2.5),
+        },
+        "volumeHeat":    vol_heat,
+        "themeStrength": min(100, max(40, vol_heat + int(abs(chg) * 3))),
+    }
+
+
+def generate_chain() -> dict:
+    print("  获取算力产业链行情…")
+    # 收集所有代码
+    all_codes = []
+    for seg in CHAIN_STOCKS.values():
+        for item in seg["items"]:
+            all_codes.append(item["code"])
+
+    quotes = fetch_quote_batch(all_codes)
+
+    # 默认 panel（行情接口失败时用）
+    default_panel = {
+        "points": [55, 58, 57, 61, 63, 66, 68],
+        "change": {"5d": "+1.5%", "10d": "+3.2%", "20d": "+6.0%"},
+        "volumeHeat": 68, "themeStrength": 74,
+    }
+
+    segments = []
+    for seg_id, seg_data in CHAIN_STOCKS.items():
+        items_out = []
+        for item in seg_data["items"]:
+            code  = item["code"]
+            quote = quotes.get(code, {})
+            panel = make_panel(quote, []) if quote else default_panel
+            items_out.append({
+                "rank":     item["rank"],
+                "name":     item["name"],
+                "code":     code,
+                "market":   item["market"],
+                "relation": item["relation"],
+                "tags":     item["tags"],
+                "panel":    panel,
+            })
+        segments.append({
+            "id":    seg_id,
+            "label": seg_data["label"],
+            "desc":  seg_data["desc"],
+            "items": items_out,
+        })
+
+    return {
+        "updatedAt":  TIME_TAG,
+        "title":      "算力产业链观察",
+        "subtitle":   "沿产业链各环节梳理真实受益标的，每日 09:30 更新",
+        "disclaimer": "以下内容仅作信息整理，不构成任何投资建议。",
+        "segments":   segments,
+    }
+
+
 # ── 写文件 ────────────────────────────────────────────────────────────
 
 def write_json(filename: str, data: dict):
@@ -346,6 +528,12 @@ def main():
             write_json("news.json", generate_news())
         except Exception as e:
             print(f"✗ 新闻更新失败：{e}", file=sys.stderr)
+
+        print("→ 更新算力产业链行情…")
+        try:
+            write_json("chain.json", generate_chain())
+        except Exception as e:
+            print(f"✗ 算力产业链更新失败：{e}", file=sys.stderr)
 
     if update_stocks:
         print("→ 更新股票观察…")

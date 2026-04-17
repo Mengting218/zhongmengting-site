@@ -519,6 +519,151 @@ a { color: inherit; }
   color: var(--muted);
 }
 
+/* ── 算力产业链 ── */
+.chain-section { padding: 12px 0 28px; }
+
+.chain-disclaimer {
+  margin-bottom: 14px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.chain-body { display: grid; gap: 16px; }
+
+.chain-segment {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.chain-seg-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: rgba(37,99,235,0.04);
+  border-bottom: 1px solid var(--line);
+}
+
+.chain-seg-label {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.chain-seg-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.chain-items { display: grid; gap: 0; }
+
+.chain-item {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chain-item:last-child { border-bottom: 0; }
+
+.chain-item-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.chain-rank {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(37,99,235,0.1);
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.chain-item-info { flex: 1; min-width: 0; }
+
+.chain-name-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.chain-name-row strong {
+  font-size: 0.95rem;
+  letter-spacing: -0.02em;
+}
+
+.chain-code {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.chain-market {
+  font-size: 0.72rem;
+  color: var(--muted);
+  background: rgba(15,23,42,0.06);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.chain-relation {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.chain-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.chain-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: rgba(37,99,235,0.08);
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.chain-chips {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.chain-spark {
+  margin-top: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(37,99,235,0.03);
+}
+
+@media (max-width: 760px) {
+  .chain-item-head { flex-direction: column; gap: 8px; }
+  .chain-chips { flex-direction: row; align-items: flex-start; }
+  .chain-seg-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+}
+
 /* ── Footer ── */
 .site-footer {
   padding: 10px 0 32px;
