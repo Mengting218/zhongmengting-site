@@ -177,7 +177,7 @@ function renderStocks(data) {
 
 async function loadNews() {
   try {
-    const r = await fetch("./news.json", { cache: "no-store" });
+    const r = await fetch("./news.json?v=" + Date.now(), { cache: "no-store" });
     if (!r.ok) throw new Error("HTTP " + r.status);
     renderNews(await r.json());
   } catch (e) {
@@ -188,7 +188,7 @@ async function loadNews() {
 
 async function loadStocks() {
   try {
-    const r = await fetch("./stocks.json", { cache: "no-store" });
+    const r = await fetch("./stocks.json?v=" + Date.now(), { cache: "no-store" });
     if (!r.ok) throw new Error("HTTP " + r.status);
     renderStocks(await r.json());
   } catch (e) {
@@ -253,7 +253,7 @@ function renderChain(data) {
 
 async function loadChain() {
   try {
-    const r = await fetch("./chain.json", { cache: "no-store" });
+    const r = await fetch("./chain.json?v=" + Date.now(), { cache: "no-store" });
     if (!r.ok) throw new Error("HTTP " + r.status);
     renderChain(await r.json());
   } catch (e) {
