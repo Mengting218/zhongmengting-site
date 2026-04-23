@@ -22,15 +22,15 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: 运行内容生成脚本
-        run: python generate_content.py --all
+      - name: 运行内容生成脚本（仅股票与产业链，新闻由 CatDesk 负责）
+        run: python generate_content.py --stocks
 
       - name: 提交并推送更新
         run: |
           git config user.name  "Pulse Daily Bot"
           git config user.email "bot@pulse-daily"
-          git add news.json stocks.json chain.json
+          git add stocks.json chain.json
           git diff --cached --quiet \
             && echo "内容无变化，跳过提交。" \
-            || git commit -m "auto: 更新内容 $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')" \
+            || git commit -m "auto: 更新股票与产业链 $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')" \
             && git push

@@ -569,18 +569,18 @@ def main():
         except Exception as e:
             print(f"✗ 新闻更新失败：{e}", file=sys.stderr)
 
-        print("→ 更新算力产业链行情…")
-        try:
-            write_json("chain.json", generate_chain())
-        except Exception as e:
-            print(f"✗ 算力产业链更新失败：{e}", file=sys.stderr)
-
     if update_stocks:
         print("→ 更新股票观察…")
         try:
             write_json("stocks.json", generate_stocks())
         except Exception as e:
             print(f"✗ 股票更新失败：{e}", file=sys.stderr)
+
+        print("→ 更新算力产业链行情…")
+        try:
+            write_json("chain.json", generate_chain())
+        except Exception as e:
+            print(f"✗ 算力产业链更新失败：{e}", file=sys.stderr)
 
     print("完成。")
 
